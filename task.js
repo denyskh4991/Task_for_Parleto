@@ -23,56 +23,45 @@ expenses = {
 
 function solution(expenses) {
     let result = null;
+    const allExpenses = [];
+    let foundSunday = false;
 
-    // Function to calculate median
     function median(numbers) {
         if (numbers.length === 0) return 0;
         numbers.sort((a, b) => a - b);
         const half = Math.floor(numbers.length / 2);
-
-        if (numbers.length % 2) {
+        if (numbers.length % 2 === 1) {
             return numbers[half];
         }
-
-        return (numbers[half - 1] + numbers[half]) / 2.0;
+        return Math.round((numbers[half - 1] + numbers[half]) / 2.0);
     }
-
-    // Collect all expenses up to and including the first Sunday
-    const allExpenses = [];
 
     for (const [month, days] of Object.entries(expenses)) {
-        // Sort days by numerical values
-        const sortedDays = Object.keys(days).sort((a, b) => parseInt(a) - parseInt(b));
-        for (const day of sortedDays) {
+        for (const day of Object.keys(days).sort()) {
             const date = new Date(`${month}-${day}`);
-            console.log(`Checking date: ${date}`); // Debug message for each date
+            console.log(`Checking date: ${date}`);
 
-            // Collect all expenses for the current day
             for (const categories of Object.values(days[day])) {
                 allExpenses.push(...categories);
+                console.log(`Adding expenses for ${month}-${day}: ${categories}`);
             }
 
-            // If this is Sunday, exit the loop
             if (date.getDay() === 0) {
-                console.log("Found first Sunday:", date); // Debug message
-                break; // Exit the loop after finding the first Sunday
+                console.log(`Found first Sunday: ${date}`);
+                foundSunday = true;
+                break; // Exit the inner loop
             }
         }
-        // Exit the outer loop if we have collected expenses and found the first Sunday
-        if (allExpenses.length > 0 && new Date(`${month}-${sortedDays[0]}`).getDay() === 0) {
-            break;
-        }
+        if (foundSunday) break;
     }
 
-    console.log("All expenses collected until first Sunday:", allExpenses); // Debug message
+    console.log("All expenses collected until first Sunday:", allExpenses);
+    allExpenses.sort((a, b) => a - b); // Sort expenses
+    console.log("Sorted expenses:", allExpenses);
 
-    // Sort expenses and display
-    allExpenses.sort((a, b) => a - b);
-    console.log("Sorted expenses:", allExpenses); // Debug message
-
-    // Calculate and display median
     result = median(allExpenses);
-    console.log("Median:", result); // Debug message
+    console.log("Median:", result);
+
     return result;
 }
 
