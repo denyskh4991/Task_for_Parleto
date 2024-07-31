@@ -24,7 +24,7 @@ expenses = {
 function solution(expenses) {
     let result = null;
 
-    // Функция для вычисления медианы
+    // Function for calculating the median
     function median(numbers) {
         if (numbers.length === 0) return 0;
         numbers.sort((a, b) => a - b);
